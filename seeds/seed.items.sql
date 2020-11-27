@@ -1,0 +1,10 @@
+insert into items (item_name) values ('Germany');
+insert into items (item_name) values ('Indonesia');
+insert into items (item_name) values ('Tunisia');
+insert into items (item_name) values ('Indonesia');
+insert into items (item_name) values ('France');
+insert into items (item_name) values ('Russia');
+insert into items (item_name) values ('China');
+insert into items (item_name) values ('Canada');
+insert into items (item_name) values ('China');
+insert into items (item_name) values ('Japan');
