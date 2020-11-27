@@ -53,7 +53,7 @@ app.use(function validateBearerToken(req, res, next) {
 
 app.get('/', (req, res) => {
      //debug(req);
-    res.send('Hello, world!')
+    res.send(`Team 24 let's rock the world!`)
 })
 
 app.use(function errorHandler(error, req, res, next) {
