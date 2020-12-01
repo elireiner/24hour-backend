@@ -1,33 +1,29 @@
-const FoldersService = {
-    getAllFolders(knex) {
-        return knex.select('*').from('noteful_folders')
-    },
-
-    insertFolder(knex, newFolder) {
+const ProductsService = {
+    insertProduct(knex, newProduct) {
         return knex
-            .insert(newFolder)
-            .into('noteful_folders')
+            .insert({info: newProduct})
+            .into('products')
             .returning('*')
             .then(rows => {
                 return rows[0]
             })
     },
 
-    getById(knex, id) {
-        return knex.from('noteful_folders').select('*').where('id', id).first()
+    getFirstNonAdded(knex) {
+        return knex.from('products').select('*').where('added', false).first()
     },
 
-    deleteFolder(knex, id) {
-        return knex('noteful_folders')
+    /*deleteProduct(knex, id) {
+        return knex('products')
             .where({ id })
             .delete()
-    },
+    },*/
 
-    updateFolder(knex, id, newFolderFields) {
-        return knex('noteful_folders')
+    changeToAdded(knex, id) {
+        return knex('products')
             .where({ id })
-            .update(newFolderFields)
+            .update({ added: true })
     },
 }
 
-module.exports = FoldersService
+module.exports = ProductsService

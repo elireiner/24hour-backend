@@ -7,6 +7,7 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 //winston is a logger
 const winston = require('winston');
+const productsRouter = require('./products/products-routers');
 
 const app = express()
 
@@ -53,6 +54,8 @@ app.get('/', (req, res) => {
      //debug(req);
     res.send(`Team 24 let's rock the world!`)
 })
+
+app.use('/api/products', productsRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response

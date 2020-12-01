@@ -1,65 +1,64 @@
 const path = require('path');
 const express = require('express')
-const xss = require('xss')
+//const xss = require('xss')
 //const debug = require('debug')('express:view')
-const FoldersService = require('./folders-service')
+const ProductsService = require('./products-service')
 
-const foldersRouter = express.Router()
+const productsRouter = express.Router()
 const jsonParser = express.json()
 
-const serialize = folder => ({
-    id: folder.id,
-    folder_name: folder.folder_name
+const serialize = product => ({
+    id: product.id,
+    info: product.info,
+    added: product.added
 })
 
-foldersRouter
+productsRouter
     .route('/')
-    .get((req, res, next) => {
-        const knexInstance = req.app.get('db');
-        FoldersService.getAllFolders(knexInstance)
-            .then(folders => {
-                res.json(folders.map(serialize))
-            })
-            .catch(next)
-    })
     .post(jsonParser, (req, res, next) => {
-        const { folder_name } = req.body;
-        const newFolder = { folder_name };
+        const { products } = req.body;
 
-        if (!folder_name) {
+        if (!products) {
             return res.status(400).json({
-                error: { message: `Missing 'folder_name' in request body` }
+                error: { message: `Missing 'products' in request body` }
+            })
+        }
+        if (!Array.isArray(products)) {
+            return res.status(400).json({
+                error: { message: `'Products' should be an array` }
             })
         }
 
-        FoldersService.insertFolder(
-            req.app.get('db'),
-            newFolder
-        )
+        products.map(newProduct => {
+            ProductsService.insertProduct(
+                req.app.get('db'),
+                newProduct
+            )
+        })
 
-            .then(folder => {
+            .then(product => {
                 res
                     .status(201)
-                    .location(path.posix.join(req.originalUrl, `/${folder.id}`))
-                    .json(serialize(folder))
+                    .location(path.posix.join(req.originalUrl, `/${product.id}`))
+                    .json(serialize(product))
             })
             .catch(next)
     })
 
-foldersRouter
-    .route('/folder/:folder_id')
+/*productsRouter
+    .route('/product/:product_id')
     .all((req, res, next) => {
-        FoldersService.getById(
+        ProductsService.getById(
             req.app.get('db'),
-            req.params.folder_id
+            req.params.product_id
         )
-            .then(folder => {
-                if (!folder) {
+            .then(product => {
+                if (!product) {
                     return res.status(404).json({
-                        error: { message: `Folder does not exist` }
+                        error: { message: `Product does not exist` }
                     })
                 }
-                res.folder = folder;
+                res.product = product;
                 next()
             })
             .catch(next)
@@ -67,33 +66,33 @@ foldersRouter
     })
     .get((req, res, next) => {
         res.json({
-            id: res.folder.id,
-            folder_name: xss(res.folder_name), // sanitize title
+            id: res.product.id,
+            product_name: xss(res.product_name), // sanitize title
         })
     })
     .delete(jsonParser, (req, res, next) => {
-        FoldersService.deleteFolder(req.app.get('db'),
-            req.params.folder_id)
+        ProductsService.deleteProduct(req.app.get('db'),
+            req.params.product_id)
             .then(numRowsAffected => {
                 res.status(204).end()
             })
             .catch(next)
     })
     .patch(jsonParser, (req, res, next) => {
-        const { folder_name } = req.body;
-        const folderToUpdate = { folder_name }
+        const { product_name } = req.body;
+        const productToUpdate = { product_name }
 
      
-        if (!folder_name) {
+        if (!product_name) {
             return res.status(400).json({
-                error: {message: `Request body must contain a folder_name `}
+                error: {message: `Request body must contain a product_name `}
             })
         }
         
-        FoldersService.updateFolder(
+        ProductsService.updateProduct(
             req.app.get('db'),
-            req.params.folder_id,
-            folderToUpdate
+            req.params.product_id,
+            productToUpdate
         )
 
             .then(numRowsAffected => {
@@ -101,6 +100,6 @@ foldersRouter
             })
 
             .catch(next)
-    })
+    })*/
 
-module.exports = foldersRouter
+module.exports = productsRouter
