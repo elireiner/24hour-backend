@@ -1,4 +1,4 @@
-/*const path = require('path');
+const path = require('path');
 const express = require('express')
 const xss = require('xss')
 //const debug = require('debug')('express:view')
@@ -103,4 +103,4 @@ foldersRouter
             .catch(next)
     })
 
-module.exports = foldersRouter*/
+module.exports = foldersRouter
