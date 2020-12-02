@@ -103,3 +103,39 @@ productsRouter
     })*/
 
 module.exports = productsRouter
+
+
+
+//new post
+/*.post(jsonParser, async (req, res, next) => {
+        const { products } = req.body;
+
+        if (!products) {
+            return res.status(400).json({
+                error: { message: `Missing 'products' in request body` }
+            })
+        }
+        if (!Array.isArray(products)) {
+            return res.status(400).json({
+                error: { message: `'Products' should be an array` }
+            })
+        }
+
+        try {
+            await products.map(newProduct => {
+                ProductsService.insertProduct(
+                    req.app.get('db'),
+                    newProduct
+                )
+                    .catch(next)
+            })
+            .then(res => {
+                postNewProducts(req.app.get('db'));
+            })
+            res.status(201).end()
+        } catch (error) {
+            next(error);
+        } 
+
+        next();
+    })*/
