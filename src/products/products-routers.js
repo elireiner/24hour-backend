@@ -29,13 +29,10 @@ productsRouter
             })
         }
 
-        products.map(newProduct => {
-            ProductsService.insertProduct(
+            ProductsService.insertProducts(
                 req.app.get('db'),
-                newProduct
+                products
             )
-        })
-
             .then(product => {
                 res
                     .status(201)

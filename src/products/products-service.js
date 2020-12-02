@@ -1,7 +1,7 @@
 const ProductsService = {
-    insertProduct(knex, newProduct) {
+    insertProducts(knex, products) {
         return knex
-            .insert({info: newProduct})
+            .insert(products)
             .into('products')
             .returning('*')
             .then(rows => {
