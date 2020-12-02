@@ -9,8 +9,8 @@ const ProductsService = {
             })
     },
 
-    getFirstNonAdded(knex) {
-        return knex.from('products').select('*').where('added', false).first()
+    getNonAddedProducts(knex) {
+        return knex.raw(`select * from products where added=false;`)
     },
 
     /*deleteProduct(knex, id) {
