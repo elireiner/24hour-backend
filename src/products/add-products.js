@@ -1,4 +1,4 @@
-import ProductsService from "./products-service"
+const catalogApiService = require('../api/catalog-api')
 const ProductsService = require('./products-service')
 
 /**
@@ -11,9 +11,11 @@ const ProductsService = require('./products-service')
 export async function addProducts(db) {
    console.log('I ran')
    const productsToAdd = ProductsService.getNonAddedProducts()
-   
-  await productsToAdd.map((product) => {
-    ProductsService.changeToAdded(db, product.id)
+
+   await productsToAdd.map((product) => {
+      catalogApiService.postNewItem(product)
+         .then(res => {
+            ProductsService.changeToAdded(product.id)
+         })
    })
-   console.log(ProductsService.getNonAddedProducts())
 }
