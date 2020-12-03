@@ -1,3 +1,15 @@
+const knex = require('knex');
+const app = require('../app');
+
+let db;
+
+db = knex({
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
+});
+
+app.set('db', db)
+
 const ProductsService = {
     insertProducts(knex, products) {
         return knex
@@ -19,7 +31,7 @@ const ProductsService = {
             .delete()
     },*/
 
-    changeToAdded(knex, id) {
+    changeToAdded(db, id) {
         return knex('products')
             .where({ id })
             .update({ added: true })
