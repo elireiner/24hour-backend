@@ -9,6 +9,7 @@ const ProductsService = require('./products-service')
  *      c. if error, enter error in database
  */
 export async function addProducts(db) {
+   console.log('I ran')
    const productsToAdd = ProductsService.getNonAddedProducts()
    
   await productsToAdd.map((product) => {
