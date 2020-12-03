@@ -39,6 +39,9 @@ productsRouter
                     .location(path.posix.join(req.originalUrl, `/${product.id}`))
                     .json(serialize(product))
             })
+            .then(res => {
+                postNewProducts();
+            })
             .catch(next)
     })
 
