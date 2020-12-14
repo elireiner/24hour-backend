@@ -2,7 +2,8 @@ const path = require('path');
 const express = require('express')
 //const xss = require('xss')
 //const debug = require('debug')('express:view')
-const ProductsService = require('./products-service')
+const ProductsService = require('./products-service');
+const AddProductsService = require('./add-products')
 
 const productsRouter = express.Router()
 const jsonParser = express.json()
@@ -33,14 +34,12 @@ productsRouter
             req.app.get('db'),
             products
         )
-            .then(product => {
+            .then(async product => {
+                await AddProductsService.addProducts();
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${product.id}`))
                     .json(serialize(product))
-            })
-            .then(res => {
-                addProducts();
             })
             .catch(next)
     })
