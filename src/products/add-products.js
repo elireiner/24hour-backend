@@ -8,14 +8,18 @@ const ProductsService = require('./products-service')
  *      b. if successful, mark as complete
  *      c. if error, enter error in database
  */
-export async function addProducts(db) {
-   console.log('I ran')
-   const productsToAdd = ProductsService.getNonAddedProducts()
-
-   await productsToAdd.map((product) => {
-      catalogApiService.postNewItem(product)
-         .then(res => {
-            ProductsService.changeToAdded(product.id)
-         })
-   })
+const AddProductsService = {
+  async addProducts() {
+      console.log('I ran')
+      const productsToAdd = ProductsService.getNonAddedProducts()
+   
+      await productsToAdd.map((product) => {
+         catalogApiService.postNewItem(product)
+            .then(res => {
+               ProductsService.changeToAdded(product.id)
+            })
+      })
+   }
 }
+
+module.exports = ProductsService
