@@ -1,4 +1,4 @@
-const catalogApiService = require('../api/catalog-api')
+const catalogApiService = require('../apis/catalog-api')
 const ProductsService = require('./products-service')
 
 /**
