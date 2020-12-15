@@ -8,6 +8,7 @@ const { NODE_ENV } = require('./config')
 //winston is a logger
 const winston = require('winston');
 const productsRouter = require('./products/products-routers');
+const upcsRouter = require('./upcs/upcs-routers');
 
 const app = express()
 
@@ -38,7 +39,7 @@ if (NODE_ENV !== 'production') {
     }));
 }
 
-app.use(function validateBearerToken(req, res, next) {
+/*app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN
   const authToken = req.get('Authorization')
 
@@ -48,7 +49,7 @@ app.use(function validateBearerToken(req, res, next) {
   }
 
   next()
-})
+})*/
 
 app.get('/', (req, res) => {
      //debug(req);
@@ -56,6 +57,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/products', productsRouter)
+
+app.use('/api/upcs', upcsRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response
