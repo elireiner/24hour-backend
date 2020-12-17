@@ -1,5 +1,6 @@
 const path = require('path');
-const express = require('express')
+const express = require('express');
+const apiGeniusApiService = require('../apis/apigeniuse-api')
 const AddByUpcService = require('./add-products-by-upc')
 //const xss = require('xss')
 //const debug = require('debug')('express:view')
@@ -18,8 +19,14 @@ const serialize = upc => ({
 upcsRouter
     .route('/hard-data')
     .post(jsonParser, (req, res, next) => {
-        const resData = AddByUpcService.addProducts(req.body)
-        res.status(201).json(resData)
+        console.log(req.body.data)
+        apiGeniusApiService.getItemData(req.body.data, next)
+            .then(async response => {
+                const resData = await AddByUpcService.addProducts(response)
+                res.status(201).json(resData)
+            })
+            .catch(next)
+        //  const resData = await AddByUpcService.addProducts(hardData)
     })
 
 upcsRouter
