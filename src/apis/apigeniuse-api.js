@@ -1,11 +1,12 @@
 require('dotenv').config();
-const config = require('../config')
+const config = require('../config');
 const fetch = require('node-fetch');
+const upcHelperMethods = require('../upcs/upc-helper-methods')
 
 const apiGeniusApiService = {
 
     getItemData(upc, next) {
-        
+
         const uri = `${config.APIGENIUS}/lookup?upc=${upc}`;
 
         const headers = {
@@ -14,11 +15,12 @@ const apiGeniusApiService = {
             "ApiGenius_API_Key": `ebe33c0bc4c24501bb2e3a34c7022ee9`
         };
 
-        return fetch(uri,{
+        return fetch(uri, {
             headers: headers
         })
             .then(async res => {
                 res = await res.json()
+                res = upcHelperMethods.extractData(res)
                 return res
             })
             .catch(next)
