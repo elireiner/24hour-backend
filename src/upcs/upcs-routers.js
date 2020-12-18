@@ -19,13 +19,16 @@ const serialize = upc => ({
 upcsRouter
     .route('/hard-data')
     .post(jsonParser, (req, res, next) => {
-        console.log(req.body.data)
-        apiGeniusApiService.getItemData(req.body.data, next)
-            .then(async response => {
-                const resData = await AddByUpcService.addProducts(response)
-                res.status(201).json(resData)
-            })
-            .catch(next)
+
+        Promise.all(req.body.data.reduce((acc, el) => {
+            acc = acc.concat(apiGeniusApiService.getItemData(el, next))
+            return acc
+        }, [])).then((results) => {
+            return res.status(201).json(results)
+        }).catch((err) => {
+            return res.status(400).end();
+        })
+
         //  const resData = await AddByUpcService.addProducts(hardData)
     })
 
