@@ -1,26 +1,28 @@
 const upcHelperMethods = {
-    extractData(hardData) {
+    extractData(itemData) {
         //remove text and spaces
-        const extractWeight = hardData.items.weight.replace(/[^0-9.]/g, '');
+        const extractWeight = itemData.items.weight.replace(/[^0-9.]/g, '');
         //if there is no weight, set to zero
         const finalWeight = (extractWeight.length < 1) ? 0 : extractWeight;
 
         let brand_id = 0
-        if (hardData.items.brand === "Elkay" || hardData.items.brand === "ELKAY RESIDENTIAL") {
+        if (itemData.items.brand === "Elkay" || itemData.items.brand === "ELKAY RESIDENTIAL") {
             brand_id = 63
         }
 
-        if (hardData.items.brand === "Delta") {
+        if (itemData.items.brand === "Delta") {
             brand_id = 52
         }
 
-        let category = hardData.items.category;
-        if (category === "Hardware > Plumbing > Plumbing Fixtures > Sinks" ||
+        let category = itemData.items.category;
+        if (
+            category === "Hardware > Plumbing > Plumbing Fixtures > Sinks" ||
             category === "Hardware > Plumbing > Plumbing Fixtures > Sinks > Kitchen & Utility Sinks" ||
             category === "Hardware > Plumbing > Plumbing Fixtures > Faucets" ||
             category === "Hardware > Plumbing > Plumbing Fixtures" ||
             category === "Hardware > Plumbing > Plumbing Fittings & Supports > Plumbing Valves" ||
-            category === "Home & Garden > Decor > Window Treatment Accessories > Curtain & Drape Rods") {
+            category === "Home & Garden > Decor > Window Treatment Accessories > Curtain & Drape Rods"
+        ) {
             category = null
         }
 
@@ -29,7 +31,7 @@ const upcHelperMethods = {
         let walmartPrice = 0;
         let buildPrice = 0;
         let ourPrice;
-        hardData.items.pricing.forEach(itm => {
+        itemData.items.pricing.forEach(itm => {
             //we are selling new products so we need to compare our price to sellers that also sell new ones
             if (itm.condition === "New") {
                 //Let's save only the information we need
@@ -53,7 +55,7 @@ const upcHelperMethods = {
                         walmartPrice = itm.price
                     }
                 }
-console.log(buildPrice)
+
                 //Let's get walmart's price when they are the seller.
                 if (itm.website_name === "build.com") {
                     console
@@ -74,7 +76,7 @@ console.log(buildPrice)
             ourPrice = topPrice
         }
 
-        let imagesArray = hardData.items.images
+        let imagesArray = itemData.items.images
         let topImages = [];
         //images from these retailers are usually great
         imagesArray.forEach(img => {
@@ -92,15 +94,15 @@ console.log(buildPrice)
         imagesArray.splice(1);
 
         const extractedData = {
-            "name": hardData.items.title,
-            "description": hardData.items.description,
-            "upc": hardData.items.upc,
-            "mpn": hardData.items.mpn,
-            "ean": hardData.items.ean,
-            "brand_name": hardData.items.brand,
+            "name": itemData.items.title,
+            "description": itemData.items.description,
+            "upc": itemData.items.upc,
+            "mpn": itemData.items.mpn,
+            "ean": itemData.items.ean,
+            "brand_name": itemData.items.brand,
             "brand_id": brand_id,
             "weight": `${finalWeight}`,
-            "color": hardData.items.color,
+            "color": itemData.items.color,
             "price": ourPrice,
             "category": category,
             "categories": [
