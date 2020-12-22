@@ -1,9 +1,16 @@
-const upcHelperMethods = {
-    extractData(itemData) {
+const productHelperMethods = {
+    formatItemBody(itemData) {
         //remove text and spaces
         const extractWeight = itemData.items.weight.replace(/[^0-9.]/g, '');
         //if there is no weight, set to zero
         const finalWeight = (extractWeight.length < 1) ? 0 : extractWeight;
+
+        let brandName = (itemData.items.brand.length > 1) ? itemData.items.brand : "Not Found"
+  
+        if (itemData.items.title.toLowerCase().includes("delta")) {
+            brandName = "Delta"
+        }
+
 
         let brand_id = 0
         if (itemData.items.brand === "Elkay" || itemData.items.brand === "ELKAY RESIDENTIAL") {
@@ -76,7 +83,30 @@ const upcHelperMethods = {
             ourPrice = topPrice
         }
 
-        let imagesArray = itemData.items.images
+        const itemBody = {
+            "name": itemData.items.title,
+            "description": itemData.items.description,
+            "upc": itemData.items.upc,
+            "mpn": itemData.items.mpn,
+            "ean": itemData.items.ean,
+            "brand_name": brandName,
+            "brand_id": 52,
+            "weight": `${finalWeight}`,
+            "color": itemData.items.color,
+            "price": ourPrice,
+            "categories": [
+                71
+            ],
+            "type": "physical",
+        }
+
+        if (itemBody.category === null) {
+            delete itemBody.category;
+        }
+
+        return JSON.stringify(itemBody)
+    },
+    formateImagesBody(imagesArray) {
         let topImages = [];
         //images from these retailers are usually great
         imagesArray.forEach(img => {
@@ -90,42 +120,11 @@ const upcHelperMethods = {
         imagesArray = imagesArray.map(image => {
             return { "image_url": image }
         })
-        //we don't need more than two images
-        imagesArray.splice(1);
+        //we don't need more than one image
+        imagesArray.splice(1)
 
-        const extractedData = {
-            "name": itemData.items.title,
-            "description": itemData.items.description,
-            "upc": itemData.items.upc,
-            "mpn": itemData.items.mpn,
-            "ean": itemData.items.ean,
-            "brand_name": itemData.items.brand,
-            "brand_id": brand_id,
-            "weight": `${finalWeight}`,
-            "color": itemData.items.color,
-            "price": ourPrice,
-            "category": category,
-            "categories": [
-                71
-            ],
-            "type": "physical",
-            "images": imagesArray
-        }
-
-        if (extractedData.category === null) {
-            delete extractedData.category;
-        }
-
-        return extractedData
-
-        /*const productsToAdd = ProductsService.getNonAddedProducts()
-     
-       apiGeniusApiService.getItemData(upc, next)
-        .then(res => {
-        console.log(res)
-        })
-        .catch(next)*/
+        return JSON.stringify(imagesArray[0])
     }
 }
 
-module.exports = upcHelperMethods
+module.exports = productHelperMethods
