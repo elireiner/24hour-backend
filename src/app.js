@@ -9,6 +9,7 @@ const { NODE_ENV } = require('./config')
 const winston = require('winston');
 const productsRouter = require('./products/products-routers');
 const upcsRouter = require('./upcs/upcs-routers');
+const imagesRouter = require('./images/images-routers');
 
 const app = express()
 
@@ -59,6 +60,8 @@ app.get('/', (req, res) => {
 app.use('/api/products', productsRouter)
 
 app.use('/api/upcs', upcsRouter)
+
+app.use('/api/images', imagesRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response
