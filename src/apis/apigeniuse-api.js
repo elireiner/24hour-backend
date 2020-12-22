@@ -1,7 +1,6 @@
 require('dotenv').config();
 const config = require('../config');
 const fetch = require('node-fetch');
-const upcHelperMethods = require('../upcs/upc-helper-methods')
 
 const apiGeniusApiService = {
 
@@ -20,7 +19,6 @@ const apiGeniusApiService = {
         })
             .then(async res => {
                 res = await res.json()
-                res = upcHelperMethods.extractData(res)
                 return res
             })
             .catch(next)
